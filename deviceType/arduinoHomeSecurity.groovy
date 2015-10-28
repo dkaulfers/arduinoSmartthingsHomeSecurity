@@ -26,8 +26,8 @@
 		capability "Polling"
 		capability "Refresh"
 		capability "Sensor"
-        capability "Contact Sensor"
-        capability 	"Motion Sensor"
+        	capability "Contact Sensor"
+        	capability 	"Motion Sensor"
 	}
 
 	// simulator metadata
@@ -35,17 +35,17 @@
 
 	// UI tile definitions
 	tiles {
-    	standardTile("backdoor", "device.backdoor") {
-			state "open", label: 'Back ${name}', icon: "st.contact.contact.open", backgroundColor: "#ffa81e"
-            state "closed", label: 'Back ${name}', icon: "st.contact.contact.closed", backgroundColor: "#79b821"
+        standardTile("backdoor", "device.backdoor") {
+        state "open", label: 'Back ${name}', icon: "st.contact.contact.open", backgroundColor: "#ffa81e"
+        		state "closed", label: 'Back ${name}', icon: "st.contact.contact.closed", backgroundColor: "#79b821"
 		}
-    	standardTile("frontdoor", "device.frontdoor") {
+    		standardTile("frontdoor", "device.frontdoor") {
 			state "open", label: 'Front ${name}', icon: "st.contact.contact.open", backgroundColor: "#ffa81e"
-            state "closed", label: 'Front ${name}', icon: "st.contact.contact.closed", backgroundColor: "#79b821"
+        		state "closed", label: 'Front ${name}', icon: "st.contact.contact.closed", backgroundColor: "#79b821"
 		}
-    	standardTile("sidedoor", "device.sidedoor") {
+    		standardTile("sidedoor", "device.sidedoor") {
 			state "open", label: 'Side ${name}', icon: "st.contact.contact.open", backgroundColor: "#ffa81e"
-            state "closed", label: 'Side ${name}', icon: "st.contact.contact.closed", backgroundColor: "#79b821"
+        		state "closed", label: 'Side ${name}', icon: "st.contact.contact.closed", backgroundColor: "#79b821"
 		}
 		standardTile("hallmotion", "device.hallmotion") {
 			state "active", label:'motion', icon:"st.motion.motion.active", backgroundColor:"#53a7c0"
@@ -65,43 +65,42 @@ def parse(String description) {
 	def msg = parseLanMessage(description)
 	def headerString = msg.header
 
-    if (!headerString) {
-      log.debug "headerstring was null for some reason :("
+	if (!headerString) {
+		log.debug "headerstring was null for some reason :("
     }
 
 	def result = []
 	def bodyString = msg.body
     def value = "";
 	if (bodyString) {
-    	log.debug bodyString
-    	// default the contact and motion status to closed and inactive by default
+        log.debug bodyString
+        // default the contact and motion status to closed and inactive by default
         def allContactStatus = "closed"
         def allMotionStatus = "inactive"
         def json = msg.json;
         json?.house?.door?.each { door ->
             value = door?.status == 1 ? "open" : "closed"
-           	log.debug "${door.name} door status ${value}"
-           	// if any door is open, set contact to open
+            log.debug "${door.name} door status ${value}"
+            // if any door is open, set contact to open
             if (value == "open") {
-            	allContactStatus = "open"
-            }
+				allContactStatus = "open"
+			}
 			result << createEvent(name: "${door.name}door", value: value)
         }
         json?.house?.motion?.each { motion ->
-        	value = motion?.status == 1 ? "active" : "inactive"
-            log.debug "${motion.name} motion status ${value}"
-           	// if any motion sensor is active, set motion to active
-            if (value == "active") {
-            	allMotionStatus = "active"
-            }
-            result << createEvent(name: "${motion.name}motion", value: value)
-        }
-        
-        result << createEvent(name: "contact", value: allContactStatus)
-        result << createEvent(name: "motion", value: allMotionStatus)
-	}
+			value = motion?.status == 1 ? "active" : "inactive"
+			log.debug "${motion.name} motion status ${value}"
+			// if any motion sensor is active, set motion to active
+			if (value == "active") {
+				allMotionStatus = "active"
+			}
+			result << createEvent(name: "${motion.name}motion", value: value)
+		}
 
-	result
+		result << createEvent(name: "contact", value: allContactStatus)
+		result << createEvent(name: "motion", value: allMotionStatus)
+    }
+    result
 }
 
 private Integer convertHexToInt(hex) {
