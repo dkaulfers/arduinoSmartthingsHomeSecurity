@@ -14,7 +14,7 @@ const int serverPort = 8090; // port to run the arduino server on
 IPAddress hubIp(192,168,1,43); // smartthings hub ip
 const int hubPort = 39500;    // smartthings hub port
 
-// pins that sensors are hooked to, 2 = front door, 3 = back door, 4 = side door, 5 = motion sensor
+// pins that sensors are hooked to, 2 = front door, 3 = back door, 5 = side door, 6 = motion sensor
 byte sensors[] = { 2, 3, 5, 6 };
 #define NUMSENSORS sizeof(sensors)
 byte oldSensorState[NUMSENSORS], currentSensorState[NUMSENSORS];
