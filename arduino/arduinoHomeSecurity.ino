@@ -121,7 +121,7 @@ int sendNotify() //client function to send/receieve POST data.
   if (client.connect(hubIp, hubPort)) {
     client.println(F("POST / HTTP/1.1"));
     //TODO: Remove hard coding and pull from values above
-    client.print(F("HOST: 192.168.1.43:39500"));
+    client.println(F("HOST: 192.168.1.43:39500"));
     sendJSONData(client);
   }
   else {
