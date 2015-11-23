@@ -8,11 +8,11 @@
 
 byte mac[] = { 0xB6, 0xA7, 0xE1, 0xDE, 0x9A, 0xCD }; //physical mac address, make sure it is unique
 IPAddress ip(192,168,1,22); // arduino ip in lan
-const int serverPort = 8090; // port to run the arduino server on
+const unsigned int serverPort = 8090; // port to run the arduino server on
 
 // Smartthings hub information
 IPAddress hubIp(192,168,1,43); // smartthings hub ip
-const int hubPort = 39500;    // smartthings hub port
+const unsigned int hubPort = 39500; // smartthings hub port
 
 // pins that sensors are hooked to, 2 = front door, 3 = back door, 5 = side door, 6 = motion sensor
 byte sensors[] = { 2, 3, 5, 6 };
@@ -120,8 +120,10 @@ int sendNotify() //client function to send/receieve POST data.
   int returnStatus = 1;
   if (client.connect(hubIp, hubPort)) {
     client.println(F("POST / HTTP/1.1"));
-    //TODO: Remove hard coding and pull from values above
-    client.println(F("HOST: 192.168.1.43:39500"));
+    client.print(F("HOST: "));
+    client.print(hubIp);
+    client.print(F(":"));
+    client.println(hubPort);
     sendJSONData(client);
   }
   else {
